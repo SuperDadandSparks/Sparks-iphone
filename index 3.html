@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#08142a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sparks">
+<meta name="description" content="Sparks robot face and full-body modes with eye blinking, dancing and greetings.">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="icon" href="./icon-192.png">
+<title>Sparks — Straw Hat Robot</title>
+<style>
+:root{color-scheme:dark;--blue:#72cfff;--navy:#07142b;--glass:rgba(18,42,81,.68);--edge:rgba(132,202,255,.23)}
+*{box-sizing:border-box}html{height:100%;-webkit-tap-highlight-color:transparent}body{margin:0;min-height:100%;font-family:ui-rounded,-apple-system,BlinkMacSystemFont,"SF Pro Rounded","Arial Rounded MT Bold",system-ui,sans-serif;background:radial-gradient(ellipse 80% 45% at 50% 18%,#1c4082 0%,transparent 90%),linear-gradient(165deg,#081b3e,#071027 68%,#080e1e);color:#eef9ff;overscroll-behavior:none}
+button{font:inherit;cursor:pointer}button:focus-visible{outline:3px solid #81dafa;outline-offset:3px} .app{width:min(100%,520px);margin:0 auto;min-height:100dvh;padding:calc(env(safe-area-inset-top) + 18px) 18px calc(env(safe-area-inset-bottom) + 18px);display:flex;flex-direction:column;gap:13px;position:relative;isolation:isolate}
+.app:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background-image:radial-gradient(#b1edff99 0.7px,transparent 1px);background-size:63px 67px;opacity:.34}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px}.logo{font-weight:1000;letter-spacing:2px;font-size:25px;line-height:1}.sub{font-size:9px;color:#8cb9e7;letter-spacing:2px;margin-top:6px}.nav-actions{display:flex;gap:8px} .round{width:39px;height:39px;border-radius:13px;background:#132a50;border:1px solid var(--edge);color:#cceaff;display:grid;place-items:center;font-size:19px}
+.status{display:flex;align-items:center;gap:8px;color:#b8e0f7;font-size:12px}.dot{width:7px;height:7px;border-radius:50%;background:#75ffcd;box-shadow:0 0 11px #75ffcd}
+.scene{position:relative;border:1px solid rgba(129,199,255,.3);border-radius:27px;box-shadow:0 18px 45px #010615a6,inset 0 0 36px #4680c51a;min-height:315px;height:clamp(310px,51dvh,530px);overflow:hidden;isolation:isolate;background:linear-gradient(180deg,#183f80 0%,#3977c5 35%,#cae4f8 77%,#ffe7cd 100%);display:grid;place-items:center}
+.scene:before{content:"";position:absolute;width:70%;aspect-ratio:1;top:12%;left:15%;border-radius:50%;background:#fff6;filter:blur(60px);z-index:-1}
+.scene:after{content:"";position:absolute;bottom:-45px;width:90%;height:115px;border-radius:50%;background:#ffffff61;filter:blur(27px);pointer-events:none}
+.scene[data-mode="photo"]{background:#85b9f1}.hero-photo{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;position:absolute;inset:0;transform-origin:50% 84%;animation:idle 3.6s ease-in-out infinite}.hero-svg{display:none;width:min(96%,390px);height:100%;max-height:100%;transform-origin:50% 85%;filter:drop-shadow(0px 12px 15px #0a224d5e);animation:idle 3.5s ease-in-out infinite}
+.scene[data-mode="drawn"] .hero-photo{display:none}.scene[data-mode="drawn"] .hero-svg{display:block}
+@keyframes idle{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-7px) rotate(1deg)}}
+.scene.wave .hero-photo{animation:wavePhoto .32s ease-in-out 5 alternate}.scene.wave .hero-svg{animation:idle 3.5s ease-in-out infinite}.scene.wave .arm-right{animation:armwave .38s ease-in-out 5 alternate;transform-origin:251px 170px}
+.scene.dance .hero-photo{animation:dancePhoto .27s ease-in-out 12 alternate}.scene.dance .hero-svg{animation:danceDraw .3s ease-in-out 12 alternate}.scene.dance .arm-left{animation:leftDance .28s linear 12 alternate;transform-origin:75px 180px}.scene.dance .arm-right{animation:rightDance .28s linear 12 alternate;transform-origin:248px 180px}
+.scene.jump .hero-photo,.scene.jump .hero-svg{animation:jump .55s ease-in-out 2}
+.scene.sleep .hero-photo,.scene.sleep .hero-svg{animation:none;filter:brightness(.69) saturate(.8)}.scene.sleep .eye-normal{opacity:0}.eye-sleep{opacity:0}.scene.sleep .eye-sleep{opacity:1}
+.scene.blink .eye-normal{opacity:0}.scene.blink .eye-sleep{opacity:1}
+@keyframes wavePhoto{from{transform:rotate(-8deg) translateX(-7px)}to{transform:rotate(8deg) translateX(7px)}}
+@keyframes dancePhoto{from{transform:translate(-13px,-8px) rotate(-7deg)}to{transform:translate(13px,-8px) rotate(7deg)}}
+@keyframes jump{0%,100%{transform:translateY(0) scale(1)}45%{transform:translateY(-32px) scale(1.045)}}
+@keyframes danceDraw{from{transform:translate(-10px,-10px) rotate(-5deg)}to{transform:translate(10px,-10px) rotate(5deg)}}
+@keyframes armwave{from{transform:rotate(-8deg)}to{transform:rotate(26deg)}}
+@keyframes leftDance{from{transform:rotate(-12deg)}to{transform:rotate(20deg)}}
+@keyframes rightDance{from{transform:rotate(12deg)}to{transform:rotate(-16deg)}}
+.bubble{position:absolute;z-index:3;top:12px;right:12px;padding:10px 14px;background:#fffef7ee;color:#184271;font-size:13px;font-weight:850;max-width:69%;border:2px solid #fff;border-radius:16px 16px 4px 16px;box-shadow:0 6px 20px #124a7940;transition:transform .2s ease}.bubble.pulse{animation:pop .3s ease-out}@keyframes pop{from{transform:scale(.72)}to{transform:scale(1)}}
+.crew{position:absolute;bottom:13px;left:13px;font-size:10px;letter-spacing:1px;font-weight:900;background:#061f47aa;border:1px solid #ffffff55;border-radius:50px;padding:7px 11px;z-index:2}.spark{position:absolute;pointer-events:none;z-index:3;font-size:25px;animation:sparkUp .85s ease-out forwards}@keyframes sparkUp{from{transform:translateY(0) scale(.3);opacity:1}to{transform:translateY(-85px) scale(1.3) rotate(70deg);opacity:0}}
+.controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.action{min-height:77px;padding:9px 3px;border:1px solid var(--edge);border-radius:17px;background:linear-gradient(180deg,#1b4278d9,#0d274d);color:#f1f9ff;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;box-shadow:0 4px 12px #08112850}.action .emoji{font-size:26px}.action span:last-child{font-size:12px;font-weight:800}.action:active,.talk:active{transform:scale(.97)}
+.talk{width:100%;border:0;border-radius:17px;min-height:57px;color:#061b34;font-weight:1000;font-size:16px;background:linear-gradient(130deg,#9de7ff,#52b9f7);box-shadow:0 8px 26px #3facfa38;display:flex;gap:10px;align-items:center;justify-content:center}.note{color:#88a8ca;font-size:11px;text-align:center;margin:-5px 0 0}.extra{display:flex;justify-content:center;gap:8px}.text-btn{border:1px solid #6588bd55;border-radius:50px;padding:8px 13px;background:#102d55b0;color:#d7edff;font-size:12px;font-weight:700}
+.dialog{position:fixed;inset:0;z-index:9;background:#000a;display:none;justify-content:center;align-items:center;padding:16px;backdrop-filter:blur(7px)}.dialog.open{display:flex}.panel{max-width:420px;width:100%;border:1px solid #659dd8;border-radius:24px;padding:22px;background:linear-gradient(165deg,#1d447c,#09182f);box-shadow:0 25px 100px #000b}.panel h2{margin:0 0 13px;font-size:22px}.panel p{font-size:14px;line-height:1.5;color:#d2e8fa}.panel .close{float:right;border:0;background:#385a8b;color:white;width:34px;height:34px;border-radius:50%;font-size:18px}.options{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}.choice{padding:12px 5px;background:#174472;border:1px solid #6b9bd6;border-radius:12px;color:#eaf7ff;font-weight:800}.choice.active{background:#80cefa;color:#061f3b}.upload-label{display:block;border:1px dashed #7cbae0;border-radius:12px;background:#133f72;padding:14px;text-align:center;font-size:14px;font-weight:800;cursor:pointer}.smallprint{font-size:11px!important;color:#acc5df!important}.switchrow{display:flex;align-items:center;justify-content:space-between;border-top:1px solid #ffffff25;padding:14px 0}.switchrow label{font-size:14px;font-weight:750}.switchrow input{accent-color:#65caff;width:22px;height:22px}.secondary{width:100%;padding:12px;border-radius:13px;background:#153c6e;border:1px solid #91b6d0;color:white;font-weight:800;margin-top:8px}
+@media(max-height:720px){.scene{height:clamp(270px,44dvh,450px)}.app{gap:10px}.action{min-height:65px}.controls .emoji{font-size:21px}.action span:last-child{font-size:11px}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
+
+/* Sparks v2 robot face */
+.face-stage{display:none;position:absolute;top:50%;left:50%;width:min(96%,390px);height:100%;max-height:480px;transform:translate(-50%,-50%);pointer-events:none;animation:faceFloat 4s ease-in-out infinite;filter:drop-shadow(0 18px 18px #0008)}
+.scene[data-mode="face"]{background:radial-gradient(ellipse at 50% 48%,#285baa 0%,#102e66 62%,#06152f 100%)}
+.scene[data-mode="face"] .hero-photo,.scene[data-mode="face"] .hero-svg{display:none}
+.scene[data-mode="face"] .face-stage{display:block}
+.scene[data-mode="face"] .crew{bottom:12px}
+.scene[data-mode="face"] .bubble{top:auto;right:50%;bottom:45px;transform:translateX(50%);width:max-content;max-width:92%;border-radius:15px;text-align:center;padding:8px 11px;font-size:clamp(11px,2.8vw,13px);line-height:1.4}
+.scene[data-mode="face"] .bubble.pulse{animation:facePop .3s ease-out}
+@keyframes facePop{from{opacity:.6;transform:translateX(50%) scale(.8)}to{opacity:1;transform:translateX(50%) scale(1)}}
+@keyframes faceFloat{0%,100%{transform:translate(-50%,-50%) rotate(-1deg)}50%{transform:translate(-50%,calc(-50% - 7px)) rotate(1deg)}}
+.face-neck{position:absolute;top:74%;left:39%;width:22%;height:14%;background:linear-gradient(90deg,#8daed4,#253c5d 45%,#c2ecff);border:3px solid #315b91;border-radius:12px}
+.face-chest{position:absolute;left:18%;width:64%;height:22%;top:82%;border-radius:46% 46% 15px 15px;background:linear-gradient(145deg,#ebf7ff,#88b3e5 60%,#fff);border:5px solid #557fb6;text-align:center;color:#00b5ff;font-size:37px;text-shadow:0 0 10px #55d9ff}
+.face-ear{position:absolute;top:41%;width:17%;height:26%;border-radius:44%;border:5px solid #6092c9;background:linear-gradient(120deg,#e3f9ff,#8ab7e4);z-index:1;box-shadow:inset 0 0 9px #fff,0 0 20px #39d4ff55}
+.face-ear.left{left:2%}.face-ear.right{right:2%}
+.face-ear:after{content:"";position:absolute;inset:20% 16%;border:5px solid #65e6ff;border-radius:50%;background:radial-gradient(circle,#1b609e,#102d59);box-shadow:0 0 14px #29caff}
+.face-shell{position:absolute;top:24%;left:10%;width:80%;height:54%;z-index:2;border:7px solid #84b4eb;border-radius:44% 44% 38% 38% / 43% 43% 36% 36%;background:linear-gradient(135deg,#fff,#c9e6ff 33%,#7ea9dc 100%);box-shadow:inset 0 0 20px #fff,0 3px 12px #0009;overflow:hidden}
+.face-forehead{position:absolute;left:50%;top:1%;transform:translateX(-50%);color:#2a93e5;font-size:20px;text-shadow:0 0 8px #77ddff}
+.face-screen{position:absolute;inset:16% 5% 10%;border-radius:42% 42% 37% 37% / 40% 40% 36% 36%;background:radial-gradient(ellipse at 50% 25%,#174078 0%,#070f2d 59%,#030717 100%);border:4px solid #244477;box-shadow:inset 0 0 20px #4d95da77,0 0 5px #ace6ff;overflow:hidden}
+.face-screen:before{content:"";position:absolute;top:5%;left:13%;height:20%;width:55%;background:#daedff22;filter:blur(9px);border-radius:50%;transform:rotate(-13deg)}
+.face-eyes{position:absolute;left:13%;right:13%;top:22%;height:40%;display:flex;align-items:center;justify-content:space-around;gap:15%;animation:faceLook 9s ease-in-out infinite}
+.face-eye{width:32%;height:84%;border-radius:48% 48% 43% 43%;background:linear-gradient(160deg,#e0ffff,#6ce3ff 53%,#199cef);box-shadow:0 0 12px #66eaff,0 0 23px #2cbdff99;transform-origin:center;position:relative;animation:faceAwaken 1.1s ease-out both,faceBlink 6s ease-in-out 1.8s infinite}
+.face-eye.right{animation-delay:.12s,2s}
+.face-eye:after{content:"";position:absolute;top:22%;left:38%;width:27%;height:47%;border-radius:50%;background:#0b529c;box-shadow:inset 1px 2px 5px #10173e}
+@keyframes faceAwaken{0%,18%{transform:scaleY(.07)}45%{transform:scaleY(1.18)}66%{transform:scaleY(.7)}100%{transform:scaleY(1)}}
+@keyframes faceBlink{0%,45%,47%,82%,84%,100%{transform:scaleY(1)}46%,83%{transform:scaleY(.05)}}
+@keyframes faceLook{0%,35%,75%,100%{transform:translateX(0)}43%,51%{transform:translateX(5%)}61%,67%{transform:translateX(-5%)}}
+.face-cheeks{position:absolute;top:62%;width:100%;display:flex;justify-content:space-around}
+.face-cheeks i{height:7px;width:13%;border-radius:20px;background:#6cdeff;box-shadow:0 0 8px #56cfff;transform:rotate(-17deg)}.face-cheeks i:last-child{transform:rotate(17deg)}
+.face-mouth{position:absolute;top:62%;left:50%;width:24%;height:24%;transform:translateX(-50%);border-radius:8% 8% 50% 50%;background:#62e1ff;box-shadow:0 0 14px #33caff;transition:height .14s,width .14s,border-radius .14s}
+.face-hat{position:absolute;top:1%;left:0;width:100%;height:37%;z-index:5;transform:rotate(-5deg);filter:drop-shadow(0 4px 3px #30220b7a)}
+.hat-crown{position:absolute;top:0;left:25%;width:50%;height:74%;border-radius:50% 50% 20% 20%;border:4px solid #a77c32;background:repeating-linear-gradient(0deg,#dca74e,#dca74e 7px,#f1d37d 9px,#f1d37d 13px);overflow:hidden}
+.hat-crown:after{content:"";position:absolute;bottom:4%;width:100%;height:25%;background:#d7353b;border-top:3px solid #f2776c;border-bottom:3px solid #a31d27}
+.hat-brim{position:absolute;bottom:7%;left:4%;width:92%;height:28%;border:5px solid #af8033;border-radius:50%;background:repeating-linear-gradient(90deg,#dfab4d 0 8px,#f6d688 10px 14px);box-shadow:inset 0 5px 0 #ffdf98}
+.scene.surprised .face-eye{animation:none!important;transform:scale(1.13)}
+.scene.surprised .face-mouth{width:18%;height:26%;border-radius:50%}
+.scene.sleep .face-eye{animation:none!important;transform:scaleY(.08)}
+.scene.sleep .face-mouth{transform:translateX(-50%) scaleY(.14)}
+.scene.speaking .face-mouth{animation:mouthTalk .22s ease-in-out infinite alternate}
+@keyframes mouthTalk{from{width:15%;height:9%;border-radius:42%}to{width:28%;height:29%;border-radius:32% 32% 49% 49%}}
+.scene.wave .face-stage{animation:faceWiggle .27s ease-in-out 5 alternate}
+.scene.dance .face-stage{animation:faceWiggle .27s ease-in-out 12 alternate}
+.scene.jump .face-stage{animation:facePopJump .35s ease-in-out 3 alternate}
+@keyframes faceWiggle{from{transform:translate(-50%,-50%) rotate(-8deg)}to{transform:translate(-50%,-50%) rotate(8deg)}}
+@keyframes facePopJump{from{transform:translate(-50%,-50%) scale(1)}to{transform:translate(-50%,-55%) scale(1.08)}}
+.view-controls{display:flex;gap:8px}.view-btn{flex:1;min-width:0;padding:11px 3px;background:#153561;color:#ceeaff;border:1px solid var(--edge);border-radius:14px;font-weight:850;font-size:13px}.view-btn.active{background:linear-gradient(130deg,#c7f5ff,#77d5ff);color:#092445;border-color:#bbecff}.view-btn:active{transform:scale(.97)}
+@media(max-height:720px){.face-stage{max-height:365px}.view-btn{padding:8px 2px;font-size:12px}}
+@media(prefers-reduced-motion:reduce){.face-stage,.face-eye,.face-eyes{animation:none!important}}
+
+</style>
+</head>
+<body>
+<main class="app">
+<header><div><div class="logo">⚡ SPARKS</div><div class="sub">THE STRAW HAT ROBOT</div></div><div class="nav-actions"><button class="round" id="audioBtn" type="button" aria-label="Turn sound on" title="Sound">🔇</button><button class="round" id="settingsBtn" type="button" aria-label="Customize Sparks" title="Customize">⚙️</button></div></header>
+<div class="status"><span class="dot"></span> Ready for adventure • Your robot buddy</div>
+<section class="scene" id="scene" data-mode="photo" aria-label="Sparks, a straw hat robot" role="button" tabindex="0">
+  <div class="bubble" id="bubble" aria-live="polite">Ahoy, Super Dad! 👋</div>
+  <img class="hero-photo" id="heroPhoto" src="./sparks.webp" alt="Full-body Sparks robot dressed as a straw-hat pirate" draggable="false">
+  <svg class="hero-svg" viewBox="0 0 320 430" role="img" aria-label="Animated drawing of Sparks in a straw hat, red vest, blue shorts, yellow sash and sandals" xmlns="http://www.w3.org/2000/svg">
+  <defs><linearGradient id="armor" x2=".9" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#accdfb"/></linearGradient><linearGradient id="vest"><stop stop-color="#ff6964"/><stop offset="1" stop-color="#c82035"/></linearGradient><linearGradient id="screen" x2="1" y2="1"><stop stop-color="#16325c"/><stop offset="1" stop-color="#030a1b"/></linearGradient></defs>
+  <ellipse cx="161" cy="416" rx="101" ry="11" fill="#517daa88"/>
+  <g class="legs"><path d="M118 296 L144 300 139 380 104 380Z" fill="url(#armor)" stroke="#466c9d" stroke-width="4"/><path d="M184 300 L213 296 219 380 180 380Z" fill="url(#armor)" stroke="#466c9d" stroke-width="4"/><path d="M109 343h32m42 0h29" stroke="#40caff" stroke-width="6" stroke-linecap="round"/><rect x="89" y="376" rx="13" width="62" height="28" fill="#f6faff" stroke="#416aa1" stroke-width="4"/><rect x="175" y="376" rx="13" width="65" height="28" fill="#f6faff" stroke="#416aa1" stroke-width="4"/><path d="M92 393q31 -14 54 0m33 0q31 -14 54 0" stroke="#593b28" stroke-width="8" stroke-linecap="round"/><path d="M89 403h62m24 0h65" stroke="#b88745" stroke-width="7" stroke-linecap="round"/></g>
+  <g class="arm-left"><path d="M82 170q-33 12-38 59l-6 18 34 11 21-58Z" fill="url(#armor)" stroke="#5372ad" stroke-width="4"/><circle cx="53" cy="246" r="20" fill="#d9eaff" stroke="#5077b6" stroke-width="4"/><path d="M43 248q10-7 20 2" stroke="#20bdff" stroke-width="5" stroke-linecap="round"/></g>
+  <g class="arm-right"><path d="M235 174q41 -7 45-47l9-17-30-13-25 44Z" fill="url(#armor)" stroke="#5077b6" stroke-width="4"/><circle cx="275" cy="101" r="21" fill="#e6f4ff" stroke="#5077b6" stroke-width="4"/><path d="M265 91l16 15m-4-20l12 15" stroke="#42c7ff" stroke-width="4"/></g>
+  <g class="body"><path d="M111 176q-22 22-19 87l9 30h122l8-30q3-60-21-86Z" fill="url(#armor)" stroke="#5b7cb4" stroke-width="5"/><path d="M111 174q-38 27-35 118l39 5q2-53 25-83l-6-41Z" fill="url(#vest)" stroke="#a92c3b" stroke-width="4"/><path d="M210 175q39 27 34 118l-39 4q-2-52-25-83l7-41Z" fill="url(#vest)" stroke="#a92c3b" stroke-width="4"/><circle cx="108" cy="232" r="5" fill="#ffd263"/><circle cx="108" cy="260" r="5" fill="#ffd263"/><path d="M149 227l-12 25 13-3 7 17 22-31-16 2 4-11Z" fill="#35d0ff" stroke="#0d60c2" stroke-width="2"/>
+  <path d="M101 291q60-17 123 0l-11 50q-24 8-52-7l-29 6-27-5Z" fill="#2762c2" stroke="#123f9c" stroke-width="4"/><path d="M99 333q22 6 40 1m49 2q23 5 31-3" stroke="#f3f4fa" stroke-width="13" stroke-linecap="round"/><path d="M104 282q58 23 116 0" stroke="#ffd02b" stroke-width="16" fill="none"/><path d="M184 287q35 31 65 74l-37-14-23-32" fill="#ffdc33" stroke="#da9410" stroke-width="3"/></g>
+  <g class="head"><rect x="133" y="152" width="54" height="29" rx="13" fill="#759ed8" stroke="#284f84" stroke-width="4"/><ellipse cx="160" cy="102" rx="98" ry="79" fill="url(#armor)" stroke="#608cba" stroke-width="6"/><rect x="73" y="67" width="174" height="102" rx="46" fill="url(#screen)" stroke="#426da0" stroke-width="5"/><circle cx="64" cy="121" r="26" fill="#f1f8ff" stroke="#4777a9" stroke-width="5"/><circle cx="256" cy="121" r="26" fill="#f1f8ff" stroke="#4777a9" stroke-width="5"/><circle cx="64" cy="121" r="15" fill="#2e8cd2" stroke="#78e6ff" stroke-width="5"/><circle cx="256" cy="121" r="15" fill="#2e8cd2" stroke="#78e6ff" stroke-width="5"/>
+  <g class="eye-normal" stroke="#5cddff" fill="none" stroke-width="8" stroke-linecap="round"><path d="M107 109q14-19 30 0"/><path d="M180 109q14-19 30 0"/></g><g class="eye-sleep" stroke="#5cddff" fill="none" stroke-width="6" stroke-linecap="round"><path d="M108 113q15 12 28 0"/><path d="M180 113q15 12 29 0"/></g><path d="M144 133q16 23 34 0Z" fill="#6adeff"/>
+  <path d="M70 57q9-56 87-59 84-2 94 58Z" fill="#edc368" stroke="#b78a30" stroke-width="5"/><path d="M74 47q78-25 175 3" stroke="#c23530" stroke-width="17" fill="none"/><ellipse cx="160" cy="56" rx="146" ry="22" fill="#f9d478" stroke="#a5782f" stroke-width="5"/><path d="M18 54q138 29 287 0" stroke="#b78938" fill="none" stroke-width="3"/></g>
+  </svg>
+  <div class="face-stage" aria-hidden="true"><div class="face-neck"></div><div class="face-chest">⚡</div><div class="face-ear left"></div><div class="face-ear right"></div><div class="face-shell"><div class="face-forehead">⚡</div><div class="face-screen"><div class="face-eyes"><span class="face-eye left"></span><span class="face-eye right"></span></div><div class="face-cheeks"><i></i><i></i></div><div class="face-mouth"></div></div></div><div class="face-hat"><div class="hat-crown"></div><div class="hat-brim"></div></div></div>
+  <div class="crew">⚡ STRAW HAT CREW</div>
+</section>
+<div class="view-controls" role="group" aria-label="Sparks display"><button type="button" id="faceBtn" class="view-btn">😊 Robot face</button><button type="button" id="bodyBtn" class="view-btn">🏴‍☠️ Full body</button><button type="button" id="wakeBtn" class="view-btn">🔊 Wake &amp; greet</button></div>
+<div class="controls" role="group" aria-label="Sparks actions"><button type="button" class="action" data-action="wave"><span class="emoji">👋</span><span>Wave</span></button><button type="button" class="action" data-action="dance"><span class="emoji">🕺</span><span>Dance</span></button><button type="button" class="action" data-action="joke"><span class="emoji">😂</span><span>Joke</span></button><button type="button" class="action" data-action="sleep"><span class="emoji" id="sleepIcon">😴</span><span id="sleepLabel">Sleep</span></button></div>
+<button class="talk" type="button" id="talkBtn">🎙️ Talk with Sparks <span aria-hidden="true">↗</span></button>
+<p class="note">Opens ChatGPT separately; face movements are playful animations, not live AI lip-sync.</p>
+<div class="extra"><button class="text-btn" id="homeBtn">📲 Add to Home Screen</button><button class="text-btn" id="modeBtn">🎨 Animated robot</button></div>
+</main>
+<div class="dialog" id="settings" role="dialog" aria-modal="true" aria-labelledby="settingsTitle"><section class="panel"><button class="close" id="closeSettings" aria-label="Close">×</button><h2 id="settingsTitle">⚙️ Make Sparks yours</h2><p>Switch between the close-up animated face, original full-body picture, or moving cartoon body.</p><div class="options"><button class="choice" id="faceMode">😊 Robot face</button><button class="choice active" id="photoMode">🖼️ Sparks picture</button><button class="choice" id="drawnMode">🤖 Moving robot</button></div><label class="upload-label" for="upload">📸 Use a picture from Photos</label><input hidden type="file" id="upload" accept="image/*"><p class="smallprint">Your chosen picture stays on this device. Face Mode has glowing eyes and a mouth that moves during its greetings; speech requires a tap.</p><div class="switchrow"><label for="soundCheck">🔊 Speak the reactions aloud</label><input type="checkbox" id="soundCheck"></div><button class="secondary" id="resetPhoto">Restore original Sparks picture</button></section></div>
+<div class="dialog" id="homeDialog" role="dialog" aria-modal="true" aria-labelledby="homeTitle"><section class="panel"><button class="close" id="closeHome" aria-label="Close">×</button><h2 id="homeTitle">📲 Take Sparks home!</h2><p>On your iPhone, open this website in <b>Safari</b>. Tap <b>Share</b> (the square with an arrow), choose <b>Add to Home Screen</b>, enable <b>Open as Web App</b> if offered, and tap <b>Add</b>.</p><p>Then you'll get a Sparks app icon right on your Home Screen. No App Store subscription needed!</p><button class="secondary" id="doneHome">Got it! ⚡</button></section></div>
+<script>
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id),scene=$('scene'),bubble=$('bubble'),hero=$('heroPhoto');
+const originalSrc='./sparks.webp';let currentTimer=null,blinkTimer=null,sleeping=false,sound=false,photoUrl=null;
+const lines={wave:['Ahoy, Super Dad! 👋','Heyyy, Captain! ⚡','Ready for an adventure! 🏴‍☠️'],dance:['Straw hat dance time! 🕺','Check out these moves! ⚡','Yo-ho-ho! 💃'],jump:['Adventure awaits! 🚀','Let’s goooo! ⚡','You found me! 😁']};
+const jokes=['Why did the robot become a pirate? To find the ARRR-tificial treasure!','What does a robot pirate say? Byte me timbers!','Why did the ship blush? It saw the ocean’s bottom!','What’s a robot’s favorite snack? Microchips!','Why do pirates love computers? They have plenty of ports!','What did one wave say to the other? Nothing, it just waved!','How does a robot eat spaghetti? With a mega-byte!','Why was the pirate good at school? He had straight ARRRs!','What’s a robot’s favorite kind of music? Heavy metal!','What did the hat say to the robot? You go on ahead!','Why couldn’t the pirate play cards? The captain was standing on the deck!','How do robots sail? With their sea-PU!'];
+const random=arr=>arr[Math.floor(Math.random()*arr.length)];
+let mouthTimer=null,expressionTimer=null;
+function setExpression(kind){scene.classList.toggle('surprised',kind==='surprised');clearTimeout(expressionTimer);expressionTimer=setTimeout(()=>scene.classList.remove('surprised'),1800)}
+function say(text){
+bubble.textContent=text;bubble.classList.remove('pulse');void bubble.offsetWidth;bubble.classList.add('pulse');
+scene.classList.add('speaking');clearTimeout(mouthTimer);mouthTimer=setTimeout(()=>scene.classList.remove('speaking'),Math.min(3600,Math.max(950,text.length*55)));
+if(sound&&'speechSynthesis'in window){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text.replace(/[\p{Extended_Pictographic}]/gu,''));u.pitch=1.25;u.rate=1.05;u.onstart=()=>{clearTimeout(mouthTimer);scene.classList.add('speaking')};u.onend=()=>scene.classList.remove('speaking');u.onerror=()=>scene.classList.remove('speaking');speechSynthesis.speak(u)}catch{}}
+}
+function sparkle(){for(let i=0;i<7;i++){const el=document.createElement('span');el.className='spark';el.textContent=i%2?'✨':'⚡';el.style.left=(28+Math.random()*48)+'%';el.style.top=(34+Math.random()*36)+'%';el.style.animationDelay=(i*.06)+'s';scene.appendChild(el);setTimeout(()=>el.remove(),1500)}}
+function animate(type,duration=1600){scene.classList.remove('wave','dance','jump','blink');void scene.offsetWidth;scene.classList.add(type);clearTimeout(currentTimer);currentTimer=setTimeout(()=>scene.classList.remove(type),duration)}
+function reaction(kind){if(sleeping&&kind!=='sleep'){sleeping=false;scene.classList.remove('sleep');$('sleepIcon').textContent='😴';$('sleepLabel').textContent='Sleep'}
+if(kind==='sleep'){sleeping=!sleeping;scene.classList.toggle('sleep',sleeping);$('sleepIcon').textContent=sleeping?'☀️':'😴';$('sleepLabel').textContent=sleeping?'Wake':'Sleep';say(sleeping?'Goodnight, Captain... zzz 🌙':'I’m back! Let’s go! ☀️');return}
+if(kind==='joke'){setExpression('surprised');say(random(jokes));animate('jump',1100);sparkle();return}
+if(kind==='wave'){say(random(lines.wave));animate('wave',1900)}else if(kind==='dance'){say(random(lines.dance));animate('dance',3500)}else{say(random(lines.jump));animate('jump',1150)}sparkle()}
+document.querySelectorAll('[data-action]').forEach(btn=>btn.addEventListener('click',()=>reaction(btn.dataset.action)));
+scene.addEventListener('click',()=>{if(scene.dataset.mode==='face'&&!sound){setSound(true);say('HEY SUPER DAD! SPARKS REPORTING FOR DUTY! ⚡');animate('wave',1750);sparkle()}else reaction('jump')});scene.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();reaction('jump')}});
+function blink(){if(scene.dataset.mode==='drawn'&&!sleeping){scene.classList.add('blink');setTimeout(()=>scene.classList.remove('blink'),155)}blinkTimer=setTimeout(blink,2700+Math.random()*2800)}blink();
+function setSound(enabled){sound=!!enabled;$('audioBtn').textContent=sound?'🔊':'🔇';$('audioBtn').setAttribute('aria-label',sound?'Mute Sparks':'Turn Sparks sound on');$('soundCheck').checked=sound;localStorage.setItem('sparks-sound',sound?'yes':'no')}
+setSound(localStorage.getItem('sparks-sound')==='yes');$('audioBtn').addEventListener('click',()=>{setSound(!sound);say(sound?'Sparks speaking! Aye aye!':'Sound off, Captain!')});$('soundCheck').addEventListener('change',e=>setSound(e.target.checked));
+const settings=$('settings'),home=$('homeDialog');function openDialog(dialog){dialog.classList.add('open')}function closeDialog(dialog){dialog.classList.remove('open')}
+$('settingsBtn').addEventListener('click',()=>openDialog(settings));$('closeSettings').addEventListener('click',()=>closeDialog(settings));$('homeBtn').addEventListener('click',()=>openDialog(home));$('closeHome').addEventListener('click',()=>closeDialog(home));$('doneHome').addEventListener('click',()=>closeDialog(home));[settings,home].forEach(el=>el.addEventListener('click',e=>{if(e.target===el)closeDialog(el)}));document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDialog(settings);closeDialog(home)}});
+function mode(next,announce=true){
+if(!['face','photo','drawn'].includes(next))next='face';scene.dataset.mode=next;localStorage.setItem('sparks-mode',next);
+$('photoMode').classList.toggle('active',next==='photo');$('drawnMode').classList.toggle('active',next==='drawn');$('faceMode').classList.toggle('active',next==='face');
+$('faceBtn').classList.toggle('active',next==='face');$('bodyBtn').classList.toggle('active',next!=='face');
+$('modeBtn').textContent=next==='face'?'🏴‍☠️ Full body':next==='photo'?'🤖 Moving body':'😊 Robot face';
+if(announce)say(next==='face'?'Face mode activated! Hey Super Dad! ⚡':next==='photo'?'Straw hat outfit ready! 🏴‍☠️':'My arms are ready to dance! 🤖')
+}
+$('photoMode').addEventListener('click',()=>mode('photo'));$('drawnMode').addEventListener('click',()=>mode('drawn'));$('faceMode').addEventListener('click',()=>mode('face'));
+$('faceBtn').addEventListener('click',()=>mode('face'));$('bodyBtn').addEventListener('click',()=>mode('photo'));
+$('modeBtn').addEventListener('click',()=>mode(scene.dataset.mode==='face'?'photo':'face'));
+$('wakeBtn').addEventListener('click',()=>{if(sleeping){sleeping=false;scene.classList.remove('sleep');$('sleepIcon').textContent='😴';$('sleepLabel').textContent='Sleep'}mode('face',false);setSound(true);say('HEY SUPER DAD! SPARKS REPORTING FOR DUTY!');animate('wave',2000);sparkle()});
+// Save user photo in local IndexedDB; never send it off-device.
+const openDB=()=>new Promise((resolve,reject)=>{if(!window.indexedDB)return reject(Error('No IndexedDB'));const req=indexedDB.open('sparks-photos',1);req.onupgradeneeded=()=>req.result.createObjectStore('images');req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)});
+async function saveImage(blob){const db=await openDB();await new Promise((resolve,reject)=>{const tx=db.transaction('images','readwrite');tx.objectStore('images').put(blob,'portrait');tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)});db.close()}
+async function loadImage(){const db=await openDB();const blob=await new Promise((resolve,reject)=>{const tx=db.transaction('images');const req=tx.objectStore('images').get('portrait');req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)});db.close();return blob}
+async function deleteImage(){const db=await openDB();await new Promise((resolve,reject)=>{const tx=db.transaction('images','readwrite');tx.objectStore('images').delete('portrait');tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)});db.close()}
+function displayImage(blob){if(photoUrl)URL.revokeObjectURL(photoUrl);photoUrl=URL.createObjectURL(blob);hero.src=photoUrl;mode('photo')}
+$('upload').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;if(!file.type.startsWith('image/')){say('Please pick a picture!');return}if(file.size>12*1024*1024){say('Choose a photo smaller than 12 MB.');return}try{await saveImage(file);displayImage(file);say('Your Sparks photo is saved on this iPhone!')}catch{displayImage(file);say('Picture loaded for now; local saving is unavailable.')}closeDialog(settings)});
+$('resetPhoto').addEventListener('click',async()=>{try{await deleteImage()}catch{}if(photoUrl){URL.revokeObjectURL(photoUrl);photoUrl=null}hero.src=originalSrc;mode('photo');say('Original Sparks restored!')});
+loadImage().then(blob=>{if(blob){if(photoUrl)URL.revokeObjectURL(photoUrl);photoUrl=URL.createObjectURL(blob);hero.src=photoUrl}}).catch(()=>{});
+// Introduce the face once, then respect the user's preferred view.
+const firstFaceVisit=!localStorage.getItem('sparks-face-intro-v2');
+if(firstFaceVisit)localStorage.setItem('sparks-face-intro-v2','yes');
+mode(firstFaceVisit?'face':(localStorage.getItem('sparks-mode')||'face'),false);
+if(firstFaceVisit)bubble.textContent='HEY SUPER DAD! SPARKS REPORTING FOR DUTY! ⚡';
+$('talkBtn').addEventListener('click',()=>{window.location.href='https://chatgpt.com/'});
+if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+})();
+</script>
+</body>
+</html>
